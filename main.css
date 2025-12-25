@@ -4,7 +4,7 @@ body {
     position: relative;
     overflow: hidden;
     background-color: black;
-    font-family: 'Ubuntu Mono', monospace;
+    font-family: "Menlo", "Meslo LG", monospace;
 }
 
 #particles-js {
@@ -44,7 +44,7 @@ body {
 }
 
 img {
-    border-radius: 50%;
+    border-radius: 100%;
     max-width: 300px;
     width: 100%;
     height: auto;
