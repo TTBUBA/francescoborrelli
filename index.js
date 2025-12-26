@@ -1,7 +1,7 @@
 const BACKGROUND = "#101010"
 const FOREGROUND = "#50FF50"
 
-console.log(game)
+const game = document.getElementById("game");
 game.width = 800
 game.height = 800
 const ctx = game.getContext("2d")
