@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="../main.css">
+  <link rel="stylesheet" type="text/css" href="../blog-style.css">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <title>Ottimizzazioni Unity - Blog</title>
+</head>
+<body>
+  <div id="particles-js"></div>
+  
+  <div class="Container">
+    <div class="navbar">
+      <a href="../blog.html">← Torna al Blog</a>
+    </div>
+
+    <div class="blog-article">
+      <h1>⚡ Ottimizzazioni Unity per Giochi Mobili</h1>
+      <p class="article-meta">Pubblicato il 5 Giugno 2026 | Lettura: 7 minuti</p>
+
+      <section>
+        <h2>Introduzione</h2>
+        <p>Le performance sono cruciali per i giochi mobili. In questo articolo scoprirai le tecniche più efficaci per ottimizzare il tuo gioco Unity e ridurre il consumo di risorse.</p>
+      </section>
+
+      <section>
+        <h2>1. Object Pooling</h2>
+        <p>Invece di istanziare e distruggere oggetti continuamente, riutilizzali:</p>
+        <pre><code class="language-csharp">
+public class BulletPool : MonoBehaviour
+{
+    public GameObject bulletPrefab;
+    private Queue&lt;GameObject&gt; bulletPool = new Queue&lt;GameObject&gt;();
+    public int poolSize = 50;
+
+    void Start()
+    {
+        for (int i = 0; i &lt; poolSize; i++)
+        {
+            GameObject bullet = Instantiate(bulletPrefab);
+            bullet.SetActive(false);
+            bulletPool.Enqueue(bullet);
+        }
+    }
+
+    public GameObject GetBullet()
+    {
+        if (bulletPool.Count &gt; 0)
+        {
+            GameObject bullet = bulletPool.Dequeue();
+            bullet.SetActive(true);
+            return bullet;
+        }
+        return Instantiate(bulletPrefab);
+    }
+
+    public void ReturnBullet(GameObject bullet)
+    {
+        bullet.SetActive(false);
+        bulletPool.Enqueue(bullet);
+    }
+}
+        </code></pre>
+      </section>
+
+      <section>
+        <h2>2. Disabilita Script non Necessari</h2>
+        <p>Disabilita gli script quando non servono:</p>
+        <pre><code class="language-csharp">
+// Disabilita il componente quando il giocatore è lontano
+if (Vector3.Distance(transform.position, player.position) &gt; 100f)
+{
+    GetComponent&lt;EnemyAI&gt;().enabled = false;
+}
+else
+{
+    GetComponent&lt;EnemyAI&gt;().enabled = true;
+}
+        </code></pre>
+      </section>
+
+      <section>
+        <h2>3. Usa LOD (Level of Detail)</h2>
+        <p>Riduci i dettagli grafici in base alla distanza dalla camera:</p>
+        <pre><code class="language-csharp">
+// LOD Group
+LODGroup lodGroup = GetComponent&lt;LODGroup&gt;();
+// Configura nel pannello Inspector:
+// LOD 0 (0% - 50%): Modello ad alta qualità
+// LOD 1 (50% - 80%): Modello media qualità
+// LOD 2 (80% - 100%): Modello bassa qualità
+        </code></pre>
+      </section>
+
+      <section>
+        <h2>4. Caching dei Componenti</h2>
+        <p>Evita di cercare componenti ogni frame:</p>
+        <pre><code class="language-csharp">
+// CATTIVO - Lento
+void Update()
+{
+    GetComponent&lt;Rigidbody&gt;().velocity = speed;
+}
+
+// BUONO - Veloce
+private Rigidbody rb;
+
+void Start()
+{
+    rb = GetComponent&lt;Rigidbody&gt;();
+}
+
+void Update()
+{
+    rb.velocity = speed;
+}
+        </code></pre>
+      </section>
+
+      <section>
+        <h2>5. Usa Physics.IgnoreLayerCollision</h2>
+        <p>Riduci i calcoli di fisica ignorando collisioni non necessarie:</p>
+        <pre><code class="language-csharp">
+// Nel Start() del manager
+Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), 
+                             LayerMask.NameToLayer("Terrain"));
+        </code></pre>
+      </section>
+
+      <section>
+        <h2>6. Gestione della Memoria</h2>
+        <ul style="color: #ccc; line-height: 1.8; margin-left: 20px;">
+          <li>✓ Evita foreach nei loop critici</li>
+          <li>✓ Usa struct invece di class quando possibile</li>
+          <li>✓ Riduci allocazioni di memoria nel frame update</li>
+          <li>✓ Usa NativeArrays per dati numerici</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Conclusione</h2>
+        <p>Applica queste tecniche per migliorare drasticamente le performance del tuo gioco. Ricorda di profilare sempre con Unity Profiler! 📊</p>
+      </section>
+
+      <a href="../blog.html" class="back-link">← Torna al Blog</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS.load("particles-js", "particlesjs-config.json")
+  </script>
+</body>
+</html>
