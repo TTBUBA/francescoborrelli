@@ -3,33 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" type="text/css" href="../main.css">
-  <link rel="stylesheet" type="text/css" href="../blog-style.css">
+
+  <link rel="stylesheet" href="../main.css">
+  <link rel="stylesheet" href="../blog-style.css">
+
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+
   <title>Come Creare il Movimento del Player - Blog</title>
 </head>
+
 <body>
-  <div id="particles-js"></div>
-  
-  <div class="Container">
-    <div class="navbar">
-      <a href="../blog.html">← Torna al Blog</a>
-    </div>
+  <div class="blog-article">
 
-    <div class="blog-article">
-      <h1>🎮 Come Creare il Movimento del Player</h1>
-      <p class="article-meta">Pubblicato il 7 Giugno 2026 | Lettura: 5 minuti</p>
+    <h1>Come Creare il Movimento del Player</h1>
 
-      <section>
-        <h2>Introduzione</h2>
-        <p>In questo tutorial vedremo come creare un sistema di movimento fluido e reattivo per il tuo player in Unity. Useremo input da tastiera e applicheremo fisica basilare.</p>
-      </section>
+    <p class="article-meta">
+      Pubblicato il 7 Giugno 2026 | Lettura: 5 minuti
+    </p>
 
-      <section>
-        <h2>Step 1: Setup del Player</h2>
-        <p>Innanzitutto, crea un cubo o importa un modello 3D. Aggiungi un Rigidbody per la fisica:</p>
-        <pre><code class="language-csharp">
-using UnityEngine;
+    <section>
+      <h2>Introduzione</h2>
+
+      <p>
+        In questo tutorial vedremo come creare un sistema di movimento fluido e reattivo
+        per il tuo player in Unity. Useremo input da tastiera e applicheremo fisica basilare.
+      </p>
+    </section>
+
+    <section>
+      <h2>Step 1: Setup del Player</h2>
+
+      <p>
+        Innanzitutto, crea un cubo o importa un modello 3D.
+        Aggiungi un Rigidbody per la fisica:
+      </p>
+
+      <pre><code class="language-csharp">using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -56,44 +66,62 @@ public class PlayerMovement : MonoBehaviour
     {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
+
         moveDirection = new Vector3(x, 0, z).normalized;
     }
 
     void Move()
     {
-        rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
+        rb.velocity = new Vector3(
+            moveDirection.x * moveSpeed,
+            rb.velocity.y,
+            moveDirection.z * moveSpeed
+        );
     }
-}
-        </code></pre>
-      </section>
+}</code></pre>
+    </section>
 
-      <section>
-        <h2>Step 2: Aggiungi Rotazione</h2>
-        <p>Per far ruotare il player nella direzione del movimento:</p>
-        <pre><code class="language-csharp">
-void HandleInput()
+    <section>
+      <h2>Step 2: Aggiungi Rotazione</h2>
+
+      <p>
+        Per far ruotare il player nella direzione del movimento:
+      </p>
+
+      <pre><code class="language-csharp">void HandleInput()
 {
     float x = Input.GetAxis("Horizontal");
     float z = Input.GetAxis("Vertical");
+
     moveDirection = new Vector3(x, 0, z).normalized;
 
     if (moveDirection != Vector3.zero)
     {
-        Quaternion newRotation = Quaternion.LookRotation(moveDirection);
-        transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 10f);
-    }
-}
-        </code></pre>
-      </section>
+        Quaternion newRotation =
+            Quaternion.LookRotation(moveDirection);
 
-      <section>
-        <h2>Step 3: Aggiungi Salto</h2>
-        <p>Adesso aggiungiamo il salto al nostro player:</p>
-        <pre><code class="language-csharp">
-public float jumpForce = 5f;
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            newRotation,
+            Time.deltaTime * 10f
+        );
+    }
+}</code></pre>
+    </section>
+
+    <section>
+      <h2>Step 3: Aggiungi Salto</h2>
+
+      <p>
+        Adesso aggiungiamo il salto al nostro player:
+      </p>
+
+      <pre><code class="language-csharp">public float jumpForce = 5f;
 public float groundDrag = 5f;
+
 private bool isGrounded;
 private float groundDistance = 0.4f;
+
 public LayerMask groundLayer;
 
 void Update()
@@ -104,7 +132,12 @@ void Update()
 
 void CheckGround()
 {
-    isGrounded = Physics.CheckSphere(transform.position - Vector3.up * 0.5f, groundDistance, groundLayer);
+    isGrounded = Physics.CheckSphere(
+        transform.position - Vector3.up * 0.5f,
+        groundDistance,
+        groundLayer
+    );
+
     rb.drag = isGrounded ? groundDrag : 0;
 }
 
@@ -112,6 +145,7 @@ void HandleInput()
 {
     float x = Input.GetAxis("Horizontal");
     float z = Input.GetAxis("Vertical");
+
     moveDirection = new Vector3(x, 0, z).normalized;
 
     if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
@@ -122,30 +156,27 @@ void HandleInput()
 
 void Jump()
 {
-    rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-    rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-}
-        </code></pre>
-      </section>
+    rb.velocity = new Vector3(
+        rb.velocity.x,
+        0,
+        rb.velocity.z
+    );
 
-      <section>
-        <h2>Conclusione</h2>
-        <p>Perfetto! Ora hai un sistema di movimento base con salto. Puoi espanderlo aggiungendo corsa, doppio salto, e animazioni! 🚀</p>
-        <p><strong>Suggerimenti:</strong></p>
-        <ul style="color: #ccc; line-height: 1.8;">
-          <li>Regola moveSpeed e jumpForce per trovare l'equilibrio perfetto</li>
-          <li>Aggiungi una particella al salto per effetti visivi</li>
-          <li>Crea animazioni sincronizzate con il movimento</li>
-        </ul>
-      </section>
+    rb.AddForce(
+        Vector3.up * jumpForce,
+        ForceMode.Impulse
+    );
+}</code></pre>
 
-      <a href="../blog.html" class="back-link">← Torna al Blog</a>
-    </div>
+    </section>
+
+    <a href="../blog.html" class="back-link">
+      ← Torna al Blog
+    </a>
+
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-  <script>
-    particlesJS.load("particles-js", "particlesjs-config.json")
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
 </body>
 </html>

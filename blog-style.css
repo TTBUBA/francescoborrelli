@@ -105,26 +105,24 @@
 .blog-article p {
   color: #ccc;
   margin-bottom: 15px;
+  font-size: 20px;
 }
 
 .blog-article pre {
-  background: rgba(0, 0, 0, 0.3);
-  border-left: 4px solid #4CAF50;
-  padding: 15px;
-  border-radius: 5px;
+  background: #1e1e1e;
+  border-radius: 8px;
+  padding: 16px;
   overflow-x: auto;
-  margin: 15px 0;
 }
 
 .blog-article code {
-  font-family: 'Courier New', monospace;
-  font-size: 0.9em;
-  color: #4CAF50;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 14px;
 }
 
 .navbar {
-  margin-bottom: 30px;
-  position: relative;
+  position: absolute;
+  top: 40px;
   z-index: 1;
 }
 
